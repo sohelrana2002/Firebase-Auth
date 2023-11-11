@@ -9,28 +9,40 @@ import {
 
 const userAuthContext = createContext();
 
-const userAuthContextProvider = ({ children }) => {
-    const [user, setUser] = useState("")
+const UserAuthContextProvider = ({ children }) => {
+    const [user, setUser] = useState(null)
 
     const signUp = (email, password) =>{
         return createUserWithEmailAndPassword(auth, email, password);
     };
+
+    // const signUp = (email, password) =>{
+    //     return createUserWithEmailAndPassword(auth, email, password);
+    // };
 
     const logIn = (email, password) =>{
         return signInWithEmailAndPassword(auth, email, password);
     };
 
     useEffect(() =>{
-        onAuthStateChanged(auth, (currentUser) =>{
-
-        })
+        const unsubscribe =  onAuthStateChanged(auth, (currentUser) =>{
+            setUser(currentUser);
+        });
+        return () =>{
+            unsubscribe();
+        };
     }, [])
 
 
+    const sendValue = {
+        ...user,
+        signUp,
+    }
+
     return (
-        <userAuthContext value={{}}>
+        <userAuthContext.Provider value={sendValue}>
             {children}
-        </userAuthContext>
+        </userAuthContext.Provider>
     )
 };
 
@@ -39,4 +51,4 @@ const useUserAuth = () =>{
 }
 
 
-export { useUserAuth, userAuthContextProvider }
+export { useUserAuth, UserAuthContextProvider }
