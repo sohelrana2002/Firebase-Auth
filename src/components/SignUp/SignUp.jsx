@@ -1,7 +1,7 @@
 import { useState } from "react";
 import GoogleButton from "react-google-button";
 import { useUserAuth } from "../../context/UserAuth";
-import { Navigate } from "react-router-dom";
+import { useNavigate, NavLink } from "react-router-dom";
 import ErrerMessage from "../../helper/ErrerMessage/ErrerMessage";
 import "./SignUp.css";
 
@@ -12,8 +12,8 @@ const SignUp = () => {
     cPassword: "",
     errer: "",
   });
-  const { signUp } = useUserAuth();
-  // const navigate = Navigate();
+  const { signUp, googleSignIn } = useUserAuth();
+  const navigate = useNavigate();
 
   let name, value;
   const getUser = (e) => {
@@ -41,6 +41,7 @@ const SignUp = () => {
           cPassword: "",
           errer: "success",
         });
+        navigate("/log-in")
       } else {
         setUser({
           ...user,
@@ -54,6 +55,22 @@ const SignUp = () => {
       });
     }
   };
+
+
+
+  const handleGoogleSignIn = async(e) =>{
+    e.preventDefault();
+
+    try{
+      await googleSignIn();
+      navigate("/")
+    }catch(err){
+      setUser({
+        ...user,
+        errer: err.message,
+      });
+    }
+  }
 
   return (
     <div className="container signup__container">
@@ -83,10 +100,25 @@ const SignUp = () => {
           required
         />
         {user.errer && <ErrerMessage message={user.errer} />}
-        <GoogleButton style={{ width: "100%" }} />
+        <GoogleButton style={{ width: "100%" }}
+        onClick={handleGoogleSignIn} />
         <button type="submit" className="btn">
-          Submit
+          Sign Up
         </button>
+
+        <p
+        style={{
+          display: "flex",
+          alignItems: "flex-end",
+          justifyContent: "flex-end",
+          color: "rgba(0, 0, 0, 0.7)",
+          fontSize: "16px"
+        }}>Already have an account? <NavLink to="/log-in"
+        style={{
+          textDecoration: "underline",
+          color: "black",
+          paddingLeft: "8px"
+        }}> Log In</NavLink></p>
       </form>
     </div>
   );

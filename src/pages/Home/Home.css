@@ -1,0 +1,12 @@
+.home{
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+.home .btn{
+    width: max-content;
+    margin-top: 1rem;
+    padding: 1rem 2rem;
+}
