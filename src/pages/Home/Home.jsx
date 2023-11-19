@@ -19,6 +19,7 @@ const Home = () => {
       <h3>{user && user.email}</h3>
 
       <button className='btn' onClick={handleLogOut}>Log Out</button>
+      {console.log(user)}
     </div>
   )
 }
